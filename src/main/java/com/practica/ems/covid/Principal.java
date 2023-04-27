@@ -17,15 +17,21 @@ public class Principal {
 	            "LOCALIZACION;98765432J;25/10/2021;23:55;41.3871;2.1697\n" +
 	            "LOCALIZACION;87654321K;25/10/2021;23:55;41.3871;2.1697\n";
 		ContactosCovid contactosCovid = new ContactosCovid();
-		contactosCovid.loadDataFile("datos2.txt", false);
-		System.out.println(contactosCovid.getLocalizacion().toString());
-		System.out.println(contactosCovid.getPoblacion().toString());
-		//contactosCovid.loadData("LOCALIZACION;12345678J;16/05/2021;20:45;54.3890;28.1698\n", false);
-		System.out.println(contactosCovid.getListaContactos().tamanioLista());
-		System.out.println(contactosCovid.getListaContactos().getPrimerNodo());
-		System.out.println(contactosCovid.getListaContactos());
-		FechaHora ini = new FechaHora(25,5,2021,16,30);
-		FechaHora fin = new FechaHora(25,5,2021,16,30);
+		try {
+			contactosCovid.loadDataFile("datos2.txt", false);
+
+			System.out.println(contactosCovid.getLocalizacion().toString());
+			System.out.println(contactosCovid.getPoblacion().toString());
+			//contactosCovid.loadData("LOCALIZACION;12345678J;16/05/2021;20:45;54.3890;28.1698\n", false);
+			System.out.println(contactosCovid.getListaContactos().tamanioLista());
+			System.out.println(contactosCovid.getListaContactos().getPrimerNodo());
+			System.out.println(contactosCovid.getListaContactos());
+			FechaHora ini = new FechaHora(25, 5, 2021, 16, 30);
+			FechaHora fin = new FechaHora(25, 5, 2021, 16, 30);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 		
 	}
 }
