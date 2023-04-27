@@ -20,251 +20,216 @@ import com.practica.genericas.PosicionPersona;
 import com.practica.lista.ListaContactos;
 
 public class ContactosCovid {
-	private Poblacion poblacion;
-	private Localizacion localizacion;
-	private ListaContactos listaContactos;
+    private Poblacion poblacion;
+    private Localizacion localizacion;
+    private ListaContactos listaContactos;
 
-	public ContactosCovid() {
-		this.poblacion = new Poblacion();
-		this.localizacion = new Localizacion();
-		this.listaContactos = new ListaContactos();
-	}
+    public ContactosCovid() {
+        this.poblacion = new Poblacion();
+        this.localizacion = new Localizacion();
+        this.listaContactos = new ListaContactos();
+    }
 
-	public Poblacion getPoblacion() {
-		return poblacion;
-	}
+    public Poblacion getPoblacion() {
+        return poblacion;
+    }
 
-	public void setPoblacion(Poblacion poblacion) {
-		this.poblacion = poblacion;
-	}
+    public void setPoblacion(Poblacion poblacion) {
+        this.poblacion = poblacion;
+    }
 
-	public Localizacion getLocalizacion() {
-		return localizacion;
-	}
+    public Localizacion getLocalizacion() {
+        return localizacion;
+    }
 
-	public void setLocalizacion(Localizacion localizacion) {
-		this.localizacion = localizacion;
-	}
-	
-	
-
-	public ListaContactos getListaContactos() {
-		return listaContactos;
-	}
-
-	public void setListaContactos(ListaContactos listaContactos) {
-		this.listaContactos = listaContactos;
-	}
-
-	public void loadData(String data, boolean reset) throws EmsInvalidTypeException, EmsInvalidNumberOfDataException,
-			EmsDuplicatePersonException, EmsDuplicateLocationException {
-		// borro información anterior
-		if (reset) {
-			this.poblacion = new Poblacion();
-			this.localizacion = new Localizacion();
-			this.listaContactos = new ListaContactos();
-		}
-		String datas[] = dividirEntrada(data);
-		for (String linea : datas) {
-			String datos[] = this.dividirLineaData(linea);
-			if (!datos[0].equals("PERSONA") && !datos[0].equals("LOCALIZACION")) {
-				throw new EmsInvalidTypeException();
-			}
-			if (datos[0].equals("PERSONA")) {
-				if (datos.length != Constantes.MAX_DATOS_PERSONA) {
-					throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
-				}
-				this.poblacion.addPersona(this.crearPersona(datos));
-			}
-			if (datos[0].equals("LOCALIZACION")) {
-				if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
-					throw new EmsInvalidNumberOfDataException("El número de datos para LOCALIZACION es menor de 6");
-				}
-				PosicionPersona pp = this.crearPosicionPersona(datos);
-				this.localizacion.addLocalizacion(pp);
-				this.listaContactos.insertarNodoTemporal(pp);
-			}
-		}
-	}
+    public void setLocalizacion(Localizacion localizacion) {
+        this.localizacion = localizacion;
+    }
 
 
-	@SuppressWarnings("resource")
-	public void loadDataFile(String fichero, boolean reset ) throws IOException, EmsInvalidNumberOfDataException, EmsDuplicateLocationException, EmsInvalidTypeException, EmsDuplicatePersonException {
-		FileReader fr = null;
-		try {
-			// Apertura del fichero y creacion de BufferedReader para poder
-			// hacer una lectura comoda (disponer del metodo readLine()).
-			File archivo = new File(fichero);
-			fr = new FileReader(archivo);
-			BufferedReader br = new BufferedReader(fr);
-			leerFichero(br,reset);
-		}
-		finally {
+    public ListaContactos getListaContactos() {
+        return listaContactos;
+    }
+
+    public void setListaContactos(ListaContactos listaContactos) {
+        this.listaContactos = listaContactos;
+    }
+
+    public void loadData(String data, boolean reset) throws EmsInvalidTypeException, EmsInvalidNumberOfDataException,
+            EmsDuplicatePersonException, EmsDuplicateLocationException {
+        // borro información anterior
+        if (reset) {
+            this.poblacion = new Poblacion();
+            this.localizacion = new Localizacion();
+            this.listaContactos = new ListaContactos();
+        }
+        String datas[] = dividirEntrada(data);
+        for (String linea : datas) {
+            String datos[] = this.dividirLineaData(linea);
+            if (!datos[0].equals("PERSONA") && !datos[0].equals("LOCALIZACION")) {
+                throw new EmsInvalidTypeException();
+            }
+            if (datos[0].equals("PERSONA")) {
+                if (datos.length != Constantes.MAX_DATOS_PERSONA) {
+                    throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
+                }
+                this.poblacion.addPersona(this.crearPersona(datos));
+            }
+            if (datos[0].equals("LOCALIZACION")) {
+                if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
+                    throw new EmsInvalidNumberOfDataException("El número de datos para LOCALIZACION es menor de 6");
+                }
+                PosicionPersona pp = this.crearPosicionPersona(datos);
+                this.localizacion.addLocalizacion(pp);
+                this.listaContactos.insertarNodoTemporal(pp);
+            }
+        }
+    }
+
+
+    @SuppressWarnings("resource")
+    public void loadDataFile(String fichero, boolean reset) throws IOException, EmsInvalidNumberOfDataException, EmsDuplicateLocationException, EmsInvalidTypeException, EmsDuplicatePersonException {
+        FileReader fr = null;
+        try {
+            // Apertura del fichero y creacion de BufferedReader para poder
+            // hacer una lectura comoda (disponer del metodo readLine()).
+            File archivo = new File(fichero);
+            fr = new FileReader(archivo);
+            BufferedReader br = new BufferedReader(fr);
+            leerFichero(br, reset);
+        } finally {
 			/*En el finally cerramos el fichero, para asegurarnos
 			que se cierra tanto si todo va bien como si salta
 			una excepcion.*/
-			try {
-				if (null != fr) {
-					fr.close();
-				}
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-	}
+            try {
+                if (null != fr) {
+                    fr.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
 
-	private void leerFichero(BufferedReader br, boolean reset) throws EmsInvalidNumberOfDataException, EmsDuplicateLocationException, EmsInvalidTypeException, EmsDuplicatePersonException, IOException {
-		String data;
-		while ((data = br.readLine()) != null) {
-			loadData(data,reset);
-		}
-	}
-	public int findPersona(String documento) throws EmsPersonNotFoundException {
-		int pos;
-		try {
-			pos = this.poblacion.findPersona(documento);
-			return pos;
-		} catch (EmsPersonNotFoundException e) {
-			throw new EmsPersonNotFoundException();
-		}
-	}
+    private void leerFichero(BufferedReader br, boolean reset) throws EmsInvalidNumberOfDataException, EmsDuplicateLocationException, EmsInvalidTypeException, EmsDuplicatePersonException, IOException {
+        String data;
+        while ((data = br.readLine()) != null) {
+            loadData(data, reset);
+        }
+    }
 
-	public int findLocalizacion(String documento, String fecha, String hora) throws EmsLocalizationNotFoundException {
+    public int findPersona(String documento) throws EmsPersonNotFoundException {
+        int pos;
+        try {
+            pos = this.poblacion.findPersona(documento);
+            return pos;
+        } catch (EmsPersonNotFoundException e) {
+            throw new EmsPersonNotFoundException();
+        }
+    }
 
-		int pos;
-		try {
-			pos = localizacion.findLocalizacion(documento, fecha, hora);
-			return pos;
-		} catch (EmsLocalizationNotFoundException e) {
-			throw new EmsLocalizationNotFoundException();
-		}
-	}
+    public int findLocalizacion(String documento, String fecha, String hora) throws EmsLocalizationNotFoundException {
 
-	public List<PosicionPersona> localizacionPersona(String documento) throws EmsPersonNotFoundException {
-		int cont = 0;
-		List<PosicionPersona> lista = new ArrayList<PosicionPersona>();
-		Iterator<PosicionPersona> it = this.localizacion.getLista().iterator();
-		while (it.hasNext()) {
-			PosicionPersona pp = it.next();
-			if (pp.getDocumento().equals(documento)) {
-				cont++;
-				lista.add(pp);
-			}
-		}
-		if (cont == 0)
-			throw new EmsPersonNotFoundException();
-		else
-			return lista;
-	}
+        int pos;
+        try {
+            pos = localizacion.findLocalizacion(documento, fecha, hora);
+            return pos;
+        } catch (EmsLocalizationNotFoundException e) {
+            throw new EmsLocalizationNotFoundException();
+        }
+    }
 
-	public boolean delPersona(String documento) throws EmsPersonNotFoundException {
-		int cont = 0, pos = -1;
-		Iterator<Persona> it = this.poblacion.getLista().iterator();
-		while (it.hasNext()) {
-			Persona persona = it.next();
-			if (persona.getDocumento().equals(documento)) {
-				pos = cont;
-			}
-			cont++;
-		}
-		if (pos == -1) {
-			throw new EmsPersonNotFoundException();
-		}
-		this.poblacion.getLista().remove(pos);
-		return false;
-	}
+    public List<PosicionPersona> localizacionPersona(String documento) throws EmsPersonNotFoundException {
+        int cont = 0;
+        List<PosicionPersona> lista = new ArrayList<PosicionPersona>();
+        Iterator<PosicionPersona> it = this.localizacion.getLista().iterator();
+        while (it.hasNext()) {
+            PosicionPersona pp = it.next();
+            if (pp.getDocumento().equals(documento)) {
+                cont++;
+                lista.add(pp);
+            }
+        }
+        if (cont == 0)
+            throw new EmsPersonNotFoundException();
+        else
+            return lista;
+    }
 
-	private String[] dividirEntrada(String input) {
-		String cadenas[] = input.split("\\n");
-		return cadenas;
-	}
+    public boolean delPersona(String documento) throws EmsPersonNotFoundException {
+        int cont = 0, pos = -1;
+        Iterator<Persona> it = this.poblacion.getLista().iterator();
+        while (it.hasNext()) {
+            Persona persona = it.next();
+            if (persona.getDocumento().equals(documento)) {
+                pos = cont;
+            }
+            cont++;
+        }
+        if (pos == -1) {
+            throw new EmsPersonNotFoundException();
+        }
+        this.poblacion.getLista().remove(pos);
+        return false;
+    }
 
-	private String[] dividirLineaData(String data) {
-		String cadenas[] = data.split("\\;");
-		return cadenas;
-	}
+    private String[] dividirEntrada(String input) {
+        String cadenas[] = input.split("\\n");
+        return cadenas;
+    }
 
-	private Persona crearPersona(String[] data) {
-		Persona persona = new Persona();
-		for (int i = 1; i < Constantes.MAX_DATOS_PERSONA; i++) {
-			String s = data[i];
-			switch (i) {
-			case 1:
-				persona.setDocumento(s);
-				break;
-			case 2:
-				persona.setNombre(s);
-				break;
-			case 3:
-				persona.setApellidos(s);
-				break;
-			case 4:
-				persona.setEmail(s);
-				break;
-			case 5:
-				persona.setDireccion(s);
-				break;
-			case 6:
-				persona.setCp(s);
-				break;
-			case 7:
-				persona.setFechaNacimiento(parsearFecha(s));
-				break;
-			}
-		}
-		return persona;
-	}
+    private String[] dividirLineaData(String data) {
+        String cadenas[] = data.split("\\;");
+        return cadenas;
+    }
 
-	private PosicionPersona crearPosicionPersona(String[] data) {
-		PosicionPersona posicionPersona = new PosicionPersona();
-		String fecha = null, hora;
-		float latitud = 0, longitud;
-		for (int i = 1; i < Constantes.MAX_DATOS_LOCALIZACION; i++) {
-			String s = data[i];
-			switch (i) {
-			case 1:
-				posicionPersona.setDocumento(s);
-				break;
-			case 2:
-				fecha = data[i];
-				break;
-			case 3:
-				hora = data[i];
-				posicionPersona.setFechaPosicion(parsearFecha(fecha, hora));
-				break;
-			case 4:
-				latitud = Float.parseFloat(s);
-				break;
-			case 5:
-				longitud = Float.parseFloat(s);
-				posicionPersona.setCoordenada(new Coordenada(latitud, longitud));
-				break;
-			}
-		}
-		return posicionPersona;
-	}
-	
-	private FechaHora parsearFecha (String fecha) {
-		int dia, mes, anio;
-		String[] valores = fecha.split("\\/");
-		dia = Integer.parseInt(valores[0]);
-		mes = Integer.parseInt(valores[1]);
-		anio = Integer.parseInt(valores[2]);
-		FechaHora fechaHora = new FechaHora(dia, mes, anio, 0, 0);
-		return fechaHora;
-	}
-	
-	private FechaHora parsearFecha (String fecha, String hora) {
-		int dia, mes, anio;
-		String[] valores = fecha.split("\\/");
-		dia = Integer.parseInt(valores[0]);
-		mes = Integer.parseInt(valores[1]);
-		anio = Integer.parseInt(valores[2]);
-		int minuto, segundo;
-		valores = hora.split("\\:");
-		minuto = Integer.parseInt(valores[0]);
-		segundo = Integer.parseInt(valores[1]);
-		FechaHora fechaHora = new FechaHora(dia, mes, anio, minuto, segundo);
-		return fechaHora;
-	}
+    private Persona crearPersona(String[] data) {
+        Persona persona = new Persona();
+        persona.setDocumento(data[0]);
+        persona.setNombre(data[1]);
+        persona.setApellidos(data[2]);
+        persona.setEmail(data[3]);
+        persona.setDireccion(data[4]);
+        persona.setCp(data[5]);
+        persona.setFechaNacimiento(parsearFecha(data[6]));
+        return persona;
+    }
+
+    private PosicionPersona crearPosicionPersona(String[] data) {
+        PosicionPersona posicionPersona = new PosicionPersona();
+        String fecha = null, hora;
+        float latitud = 0, longitud;
+        posicionPersona.setDocumento(data[0]);
+        fecha = data[1];
+        hora = data[2];
+        posicionPersona.setFechaPosicion(parsearFecha(fecha, hora));
+        latitud = Float.parseFloat(data[3]);
+        longitud = Float.parseFloat(data[4]);
+        posicionPersona.setCoordenada(new Coordenada(latitud, longitud));
+        return posicionPersona;
+    }
+
+    private FechaHora parsearFecha(String fecha) {
+        int dia, mes, anio;
+        String[] valores = fecha.split("\\/");
+        dia = Integer.parseInt(valores[0]);
+        mes = Integer.parseInt(valores[1]);
+        anio = Integer.parseInt(valores[2]);
+        FechaHora fechaHora = new FechaHora(dia, mes, anio, 0, 0);
+        return fechaHora;
+    }
+
+    private FechaHora parsearFecha(String fecha, String hora) {
+        int dia, mes, anio;
+        String[] valores = fecha.split("\\/");
+        dia = Integer.parseInt(valores[0]);
+        mes = Integer.parseInt(valores[1]);
+        anio = Integer.parseInt(valores[2]);
+        int minuto, segundo;
+        valores = hora.split("\\:");
+        minuto = Integer.parseInt(valores[0]);
+        segundo = Integer.parseInt(valores[1]);
+        FechaHora fechaHora = new FechaHora(dia, mes, anio, minuto, segundo);
+        return fechaHora;
+    }
 }
