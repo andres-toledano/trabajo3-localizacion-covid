@@ -148,7 +148,6 @@ public class ListaContactos {
 			return 0;
 		NodoTemporal aux = lista;
 		int cont = 0;
-		int a;
 		cont = 0;
 		while(aux!=null) {
 			if(aux.getFecha().compareTo(inicio)>=0 && aux.getFecha().compareTo(fin)<=0) {
