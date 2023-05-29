@@ -211,26 +211,28 @@ public class ContactosCovid {
     }
 
     private FechaHora parsearFecha(String fecha) {
-        int dia, mes, anio;
-        String[] valores = fecha.split("\\/");
-        dia = Integer.parseInt(valores[0]);
-        mes = Integer.parseInt(valores[1]);
-        anio = Integer.parseInt(valores[2]);
-        FechaHora fechaHora = new FechaHora(dia, mes, anio, 0, 0);
-        return fechaHora;
+        int [] valores = parsearDiaMesAnio(fecha);
+        return new FechaHora(valores[0], valores[1], valores[2], 0, 0);
     }
 
     private FechaHora parsearFecha(String fecha, String hora) {
-        int dia, mes, anio;
+        int [] fechaDMA = parsearDiaMesAnio(fecha);
+        int [] horas = parsearHora(hora);
+        return new FechaHora(fechaDMA[0],fechaDMA[1], fechaDMA[2], horas[0], horas[1]);
+    }
+    private int[] parsearDiaMesAnio (String fecha) {
+        int [] fechaAux = new int[3];
         String[] valores = fecha.split("\\/");
-        dia = Integer.parseInt(valores[0]);
-        mes = Integer.parseInt(valores[1]);
-        anio = Integer.parseInt(valores[2]);
-        int minuto, segundo;
-        valores = hora.split("\\:");
-        minuto = Integer.parseInt(valores[0]);
-        segundo = Integer.parseInt(valores[1]);
-        FechaHora fechaHora = new FechaHora(dia, mes, anio, minuto, segundo);
-        return fechaHora;
+        fechaAux [0] = Integer.parseInt(valores[0]);
+        fechaAux [1] = Integer.parseInt(valores[1]);
+        fechaAux [2] = Integer.parseInt(valores[2]);
+        return fechaAux;
+    }
+    private int [] parsearHora (String hora) {
+        int [] horaAux = new int[2];
+        String [] valores = hora.split("\\:");
+        horaAux [0] = Integer.parseInt(valores[0]);
+        horaAux[1] = Integer.parseInt(valores[1]);
+        return horaAux;
     }
 }
