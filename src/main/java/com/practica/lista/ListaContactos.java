@@ -6,7 +6,7 @@ import com.practica.genericas.PosicionPersona;
 public class ListaContactos {
 	private NodoTemporal lista;
 	private int size;
-	
+
 	public void insertarNodoTemporal (PosicionPersona p) {
 		NodoTemporal aux = lista, ant=null;
 		boolean salir=false,  encontrado = false;
@@ -57,26 +57,6 @@ public class ListaContactos {
 			else
 				npAnt.setSiguiente(npNuevo);
 		}
-	}
-	
-	private boolean buscarPersona (String documento, NodoPersonas nodo) {
-		NodoPersonas aux = nodo;
-		while(aux!=null) {
-			if(aux.getDocumento().equals(documento)) {
-				return true;				
-			}else {
-				aux = aux.getSiguiente();
-			}
-		}
-		return false;
-	}
-	
-	private void insertarPersona (String documento, NodoPersonas nodo) {
-		NodoPersonas aux = nodo, nuevo = new NodoPersonas(documento, null);
-		while(aux.getSiguiente()!=null) {				
-			aux = aux.getSiguiente();				
-		}
-		aux.setSiguiente(nuevo);		
 	}
 	
 	public int personasEnCoordenadas () {
